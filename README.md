@@ -26,7 +26,7 @@ I'm a software developer who is constantly improving myself and eager to learn n
 ## 📊 My GitHub Stats
 
 <p align="center">
-  <img src="https://github-profile-trophy.vercel.app/?username=akifkomurcu&theme=tokyonight&no-bg=true&margin-w=15" alt="Trophies" />
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=akifkomurcu&theme=tokyo-night" alt="Activity Graph" />
 </p>
 
 <p align="center">
