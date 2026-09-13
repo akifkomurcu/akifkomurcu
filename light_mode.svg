@@ -29,7 +29,7 @@ text, tspan { white-space: pre; }
   <text x="25" y="150" xml:space="preserve"><tspan class="cc">. </tspan></text>
   <text x="25" y="170" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Languages.Code:</tspan><tspan class="cc">............</tspan><tspan class="value">TypeScript, JavaScript, Swift</tspan></text>
   <text x="25" y="190" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Frontend:</tspan><tspan class="cc">.........</tspan><tspan class="value">React, React Native, Angular, Tailwind</tspan></text>
-  <text x="25" y="210" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Backend:</tspan><tspan class="cc">.....</tspan><tspan class="value">NestJS, Node.js, Express, Python, REST APIs</tspan></text>
+  <text x="25" y="210" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Backend:</tspan><tspan class="cc">..............</tspan><tspan class="value">NestJS, Node.js, Python, REST APIs</tspan></text>
   <text x="25" y="230" xml:space="preserve"><tspan class="cc">. </tspan></text>
   <text x="25" y="250" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Native:</tspan><tspan class="cc">..............</tspan><tspan class="value">Swift (macOS/iOS), Kotlin (Android)</tspan></text>
   <text x="25" y="270" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Tools:</tspan><tspan class="cc">...............</tspan><tspan class="value">Git, GitHub Actions, Xcode, Postman</tspan></text>

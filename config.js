@@ -20,7 +20,7 @@ export default {
   // Skills
   languagesCode: 'TypeScript, JavaScript, Swift',
   frontend: 'React, React Native, Angular, Tailwind',
-  backend: 'NestJS, Node.js, Express, Python, REST APIs',
+  backend: 'NestJS, Node.js, Python, REST APIs',
   native: 'Swift (macOS/iOS), Kotlin (Android)',
   tools: 'Git, GitHub Actions, Xcode, Postman',
   focus: 'Web + Mobile Product Engineering',
