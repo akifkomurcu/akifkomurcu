@@ -32,9 +32,4 @@ export default {
   tools: 'Git, GitHub Actions, Xcode, Postman',
   focus: 'Web + Mobile Product Engineering',
 
-  // Location & contact
-  location: 'Türkiye',
-  email: 'akifkomurcu@outlook.com',
-  linkedin: 'akifkomurcu',
-  website: 'apptionly.com',
 };

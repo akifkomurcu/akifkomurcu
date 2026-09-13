@@ -16,6 +16,15 @@ import config from '../config.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 
+// Right column layout: first baseline at 30, one line every 20, 20 of padding
+// underneath. Everything else sizes itself off the number of lines, so adding
+// or removing a line never leaves the card the wrong height.
+const FIRST_BASELINE = 30;
+const LINE_HEIGHT = 20;
+const BOTTOM_PADDING = 20;
+const cardHeightFor = rowCount =>
+  FIRST_BASELINE + (rowCount - 1) * LINE_HEIGHT + BOTTOM_PADDING;
+
 // ─── XML ESCAPING ─────────────────────────────────────────────
 function escapeXml(str) {
   return String(str)
@@ -55,11 +64,12 @@ function calculateUptime(startDateStr) {
 // ─── GENERATE CHUNKY PIXEL PORTRAIT ───────────────────────────
 // Renders the avatar as a grid of flat colour tiles (one <rect> per tile),
 // which survives any font stack — unlike glyph based ASCII art.
-async function generatePixelArt(imagePath) {
+async function generatePixelArt(imagePath, cardHeight) {
   const CELL = 12;                 // tile size in SVG units
-  const GRID = 33;                 // tiles per side (square crop)
+  const INSET = 20;                // breathing room above and below the art
+  const GRID = Math.floor((cardHeight - INSET * 2) / CELL);  // tiles per side
   const ORIGIN_X = 10;
-  const ORIGIN_Y = Math.round((530 - GRID * CELL) / 2);
+  const ORIGIN_Y = Math.round((cardHeight - GRID * CELL) / 2);
 
   let pipeline = sharp(imagePath);
   if (config.avatarCrop) pipeline = pipeline.extract(config.avatarCrop);
@@ -279,9 +289,6 @@ function buildRightLines(stats, uptime) {
   const headerUser = `${config.name}@${config.host} `;
   const headerDashes = '-'.repeat(Math.max(2, TARGET_LEN - headerUser.length));
 
-  const contactPrefix = '- Contact ';
-  const contactDashes = '-'.repeat(Math.max(2, TARGET_LEN - contactPrefix.length));
-
   const statsPrefix = '- GitHub Stats ';
   const statsDashes = '-'.repeat(Math.max(2, TARGET_LEN - statsPrefix.length));
 
@@ -317,63 +324,30 @@ function buildRightLines(stats, uptime) {
   const endDots = '.'.repeat(Math.max(2, endDotsCount));
 
   return [
-    // 0: Header
     {
       type: 'header',
       user: escapeXml(headerUser),
       dashes: headerDashes,
     },
-    // 1: Host / Role
     makeDotLine('Host', config.role),
-    // 2: Uptime (DYNAMIC)
     makeDotLine('Uptime', uptime),
-    // 3: Kernel
     makeDotLine('Kernel', config.kernel),
-    // 4: Databases
     makeDotLine('Databases', config.databases),
-    // 5: Cloud & DevOps
     makeDotLine('DevOps', config.devops),
-    // 6: Blank
     { type: 'blank' },
-    // 7: Languages.Code
     makeDotLine('Languages.Code', config.languagesCode),
-    // 8: Frontend
     makeDotLine('Frontend', config.frontend),
-    // 9: Backend
     makeDotLine('Backend', config.backend),
-    // 10: Blank
     { type: 'blank' },
-    // 11: Native
     makeDotLine('Native', config.native),
-    // 12: Tools
     makeDotLine('Tools', config.tools),
-    // 13: Focus
     makeDotLine('Focus', config.focus),
-    // 14: Blank
     { type: 'blank' },
-    // 15: Contact Header
-    {
-      type: 'section',
-      title: 'Contact',
-      dashes: contactDashes,
-    },
-    // 16: Email
-    makeDotLine('Email', config.email),
-    // 17: LinkedIn
-    makeDotLine('LinkedIn', config.linkedin),
-    // 18: Website
-    makeDotLine('Website', config.website),
-    // 19: Location
-    makeDotLine('Location', config.location),
-    // 20: Blank
-    { type: 'blank' },
-    // 21: GitHub Stats Header
     {
       type: 'section',
       title: 'GitHub Stats',
       dashes: statsDashes,
     },
-    // 22: Repos & Stars (58 chars total)
     {
       type: 'stats_repos_stars',
       repos: reposStr,
@@ -381,7 +355,6 @@ function buildRightLines(stats, uptime) {
       starsDots: starsDots,
       stars: starsStr,
     },
-    // 23: Commits & Followers (58 chars total)
     {
       type: 'stats_commits_followers',
       commits: commitsStr,
@@ -389,7 +362,6 @@ function buildRightLines(stats, uptime) {
       followersDots: followersDots,
       followers: followersStr,
     },
-    // 24: Lines of Code (58 chars total)
     {
       type: 'stats_loc',
       loc: locStr,
@@ -431,8 +403,8 @@ function renderSvg(theme, pixelData, rightLines) {
 
   // Generate right column lines
   let rowsSvg = '';
-  for (let i = 0; i < 25; i++) {
-    const y = 30 + i * 20;
+  for (let i = 0; i < rightLines.length; i++) {
+    const y = FIRST_BASELINE + i * LINE_HEIGHT;
     const r = rightLines[i];
 
     let rightSvg = '';
@@ -456,12 +428,13 @@ function renderSvg(theme, pixelData, rightLines) {
   }
 
   const CARD_WIDTH = 1000;
+  const CARD_HEIGHT = cardHeightFor(rightLines.length);
 
   return `<?xml version='1.0' encoding='UTF-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CARD_WIDTH} 530" width="100%" height="auto" xml:space="preserve" font-family="Consolas, 'Courier New', monospace">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CARD_WIDTH} ${CARD_HEIGHT}" width="100%" height="auto" xml:space="preserve" font-family="Consolas, 'Courier New', monospace">
 <defs>
   <clipPath id="cardClip">
-    <rect width="${CARD_WIDTH}px" height="530px" rx="15"/>
+    <rect width="${CARD_WIDTH}px" height="${CARD_HEIGHT}px" rx="15"/>
   </clipPath>
 </defs>
 <style>
@@ -475,7 +448,7 @@ text, tspan { white-space: pre; }
 </style>
 
 <!-- Card Base -->
-<rect width="${CARD_WIDTH}px" height="530px" fill="${colors.cardBg}" rx="15" ${colors.border}/>
+<rect width="${CARD_WIDTH}px" height="${CARD_HEIGHT}px" fill="${colors.cardBg}" rx="15" ${colors.border}/>
 
 <!-- Left Pixel Portrait -->
 <g clip-path="url(#cardClip)" shape-rendering="crispEdges">
@@ -494,10 +467,6 @@ ${rowsSvg}
 export async function build() {
   console.log('🚀 Building neofetch terminal SVGs...\n');
 
-  const avatarPath = path.join(ROOT, config.avatarImage);
-  console.log('🎨 Generating chunky pixel portrait...');
-  const pixelData = await generatePixelArt(avatarPath);
-
   console.log(`📊 Fetching stats for @${config.username}...`);
   const stats = await fetchStats(config.username);
 
@@ -505,6 +474,10 @@ export async function build() {
   console.log(`⏱️  Uptime (from GitHub join date): ${uptime}`);
 
   const rightLines = buildRightLines(stats, uptime);
+
+  console.log('🎨 Generating chunky pixel portrait...');
+  const avatarPath = path.join(ROOT, config.avatarImage);
+  const pixelData = await generatePixelArt(avatarPath, cardHeightFor(rightLines.length));
 
   console.log('🖼️  Writing responsive dark_mode.svg and light_mode.svg...');
   const darkSvg = renderSvg('dark', pixelData, rightLines);
