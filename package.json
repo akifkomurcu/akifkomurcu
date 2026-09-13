@@ -1,0 +1,13 @@
+{
+  "name": "akifkomurcu-profile",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Dynamic GitHub profile README with neofetch-style terminal card",
+  "scripts": {
+    "build": "node scripts/build-svg.js"
+  },
+  "dependencies": {
+    "sharp": "^0.33.0"
+  }
+}

@@ -1,18 +1,10 @@
 <div align="center">
-
-```
-akif@komurcu ---------------------------------------------
-. Host:......................... Full Stack Developer
-. Kernel:....................... React, React Native, Angular
-. Backend:...................... NestJS, TypeScript, Docker, Jenkins
-. Native:....................... Swift (macOS), Kotlin (Android)
-. Focus:........................ Web + mobile product engineering
--
-- Contact -------------------------------------------------
-. Email:......................... akifkomurcu@outlook.com
-. LinkedIn:...................... linkedin.com/in/akifkomurcu
-```
-
+  <a href="https://github.com/akifkomurcu">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./dark_mode.svg">
+      <img alt="akif's Profile" src="./light_mode.svg">
+    </picture>
+  </a>
 </div>
 
 ---
