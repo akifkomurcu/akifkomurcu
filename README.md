@@ -26,17 +26,12 @@
 
 ---
 
-### 🌟 Featured Projects
-
-- **[Apptionly](https://apptionly.com/)** — App Store screenshot generator: canvas rendering, undo/redo, PWA. React 19, Zustand, Tailwind 4, Supabase.
-- **[maarifhan](https://github.com/akifkomurcu/maarifhan)** — AI-supported education platform. Angular.
-- **[maarifhan-be](https://github.com/akifkomurcu/maarifhan-be)** — Backend for maarifhan. NestJS.
-- **[TapLocks](https://github.com/akifkomurcu/TapLocks)** — lets you easily lock your screen macOS app. Swift.
-- **[Shelf](https://github.com/akifkomurcu/shelf)** — macOS menu bar icon manager, native Command+Drag. Swift.
-- **[Moon Tracker](https://apps.apple.com/tr/app/ay-g%C3%B6zlemcisi/id6755927447?l=tr)** — iOS moon phase/lunar cycle tracker. React Native.
-- **[FloatX (Sliding Apps)](https://github.com/akifkomurcu/sliding-apps)** — Android floating multitasking hub. Kotlin.
-- **[Product Alarm](https://github.com/akifkomurcu/product-alarm)** — Price-tracking scraper (Akakçe, Trendyol, Hepsiburada) with Telegram alerts. Python, Docker.
-- **[idm-cli](https://github.com/akifkomurcu/idm-cli)** — download tool like idm, works on terminal, Pyhton.
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./projects_dark.svg">
+    <img alt="Featured Projects" src="./projects_light.svg">
+  </picture>
+</div>
 
 ---
 

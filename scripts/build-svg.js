@@ -213,6 +213,64 @@ async function fetchStats(username) {
   return { repos, stars, followers, contributed, commits, additions, deletions, netLoc, createdAt };
 }
 
+// ─── FORMAT FEATURED PROJECTS CARD ─────────────────────────────
+// Greedy word-wrap: fills each line up to maxLen before breaking, same rule
+// a terminal `fold` would use.
+function wrapText(text, maxLen) {
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  for (const word of words) {
+    const candidate = line ? `${line} ${word}` : word;
+    if (candidate.length > maxLen && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = candidate;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+function buildProjectLines(projects) {
+  const TARGET_LEN = 58;
+  const DESC_WIDTH = 52; // leaves room for the 4-space indent inside TARGET_LEN
+
+  const headerPrefix = '- Featured Projects ';
+  const headerDashes = '-'.repeat(Math.max(2, TARGET_LEN - headerPrefix.length));
+
+  const rows = [
+    { type: 'section', title: 'Featured Projects', dashes: headerDashes },
+  ];
+
+  projects.forEach((project, i) => {
+    const nameWithColon = project.name + ':';
+    const baseLen = 2 + nameWithColon.length + project.tech.length;
+    const dots = '.'.repeat(Math.max(2, TARGET_LEN - baseLen));
+    rows.push({
+      type: 'kv',
+      key: escapeXml(nameWithColon),
+      dots,
+      value: escapeXml(project.tech),
+    });
+
+    for (const line of wrapText(project.description, DESC_WIDTH)) {
+      rows.push({ type: 'note', text: escapeXml(line) });
+    }
+
+    if (i < projects.length - 1) rows.push({ type: 'blank' });
+  });
+
+  return rows;
+}
+
+function renderProjectsSvg(theme, projectLines) {
+  const CARD_WIDTH = 600;
+  const CARD_HEIGHT = cardHeightFor(projectLines.length);
+  return wrapCard(theme === 'dark', CARD_WIDTH, CARD_HEIGHT, rowsToSvg(projectLines));
+}
+
 // ─── FORMAT RIGHT COLUMN WITH DOT LEADERS ─────────────────────
 function buildRightLines(stats, uptime) {
   // Target width: exactly 58 characters so right margin matches left margin (25px each)
@@ -320,10 +378,9 @@ function buildRightLines(stats, uptime) {
 }
 
 // ─── RENDER RESPONSIVE SVG (DARK & LIGHT) ─────────────────────
-function renderSvg(theme, rightLines) {
-  const isDark = theme === 'dark';
-
-  const colors = isDark
+// Both cards (stats + projects) share the same palette and envelope.
+function colorsFor(isDark) {
+  return isDark
     ? {
         cardBg: '#0d1017',   // Dark mode background per user request
         border: '',
@@ -344,41 +401,46 @@ function renderSvg(theme, rightLines) {
         del: '#cf222e',      // Red
         title: '#24292f',
       };
+}
 
-  // Generate right column lines
-  let rowsSvg = '';
-  for (let i = 0; i < rightLines.length; i++) {
-    const y = FIRST_BASELINE + i * LINE_HEIGHT;
-    const r = rightLines[i];
-
-    let rightSvg = '';
-    if (!r || r.type === 'blank') {
-      rightSvg = `<tspan class="cc">. </tspan>`;
-    } else if (r.type === 'header') {
-      rightSvg = `<tspan class="key">${r.user}</tspan><tspan class="cc">${r.dashes}</tspan>`;
-    } else if (r.type === 'section') {
-      rightSvg = `<tspan class="cc">- </tspan><tspan class="title">${r.title} </tspan><tspan class="cc">${r.dashes}</tspan>`;
-    } else if (r.type === 'kv') {
-      rightSvg = `<tspan class="cc">. </tspan><tspan class="key">${r.key}</tspan><tspan class="cc">${r.dots}</tspan><tspan class="value">${r.value}</tspan>`;
-    } else if (r.type === 'stats_repos_stars') {
-      rightSvg = `<tspan class="cc">. </tspan><tspan class="key">Repos: </tspan><tspan class="value">${r.repos}</tspan><tspan class="key"> {Contributed: </tspan><tspan class="value">${r.contributed}</tspan><tspan class="key">}</tspan><tspan class="cc"> | </tspan><tspan class="key">Stars: </tspan><tspan class="cc">${r.starsDots}</tspan><tspan class="value">${r.stars}</tspan>`;
-    } else if (r.type === 'stats_commits_followers') {
-      rightSvg = `<tspan class="cc">. </tspan><tspan class="key">Commits:</tspan><tspan class="cc">${r.commitsDots}</tspan><tspan class="value">${r.commits}</tspan><tspan class="cc"> | </tspan><tspan class="key">Followers: </tspan><tspan class="cc">${r.followersDots}</tspan><tspan class="value">${r.followers}</tspan>`;
-    } else if (r.type === 'stats_loc') {
-      rightSvg = `<tspan class="cc">. </tspan><tspan class="key">Lines of Code:</tspan><tspan class="cc">${r.locMidDots}</tspan><tspan class="value">${r.loc}</tspan><tspan class="cc"> ( </tspan><tspan class="addColor">${r.added}++</tspan><tspan class="cc">, </tspan><tspan class="delColor">${r.deleted}-- </tspan><tspan class="cc">${r.endDots} )</tspan>`;
-    }
-
-    rowsSvg += `  <text x="25" y="${y}" xml:space="preserve">${rightSvg}</text>\n`;
+// Renders one row descriptor to a <text> line. Shared by every card — a row
+// type only needs to exist here once, not once per card that might use it.
+function rowToSvg(r, y) {
+  let inner = '';
+  if (!r || r.type === 'blank') {
+    inner = `<tspan class="cc">. </tspan>`;
+  } else if (r.type === 'header') {
+    inner = `<tspan class="key">${r.user}</tspan><tspan class="cc">${r.dashes}</tspan>`;
+  } else if (r.type === 'section') {
+    inner = `<tspan class="cc">- </tspan><tspan class="title">${r.title} </tspan><tspan class="cc">${r.dashes}</tspan>`;
+  } else if (r.type === 'kv') {
+    inner = `<tspan class="cc">. </tspan><tspan class="key">${r.key}</tspan><tspan class="cc">${r.dots}</tspan><tspan class="value">${r.value}</tspan>`;
+  } else if (r.type === 'note') {
+    inner = `<tspan class="cc">    ${r.text}</tspan>`;
+  } else if (r.type === 'stats_repos_stars') {
+    inner = `<tspan class="cc">. </tspan><tspan class="key">Repos: </tspan><tspan class="value">${r.repos}</tspan><tspan class="key"> {Contributed: </tspan><tspan class="value">${r.contributed}</tspan><tspan class="key">}</tspan><tspan class="cc"> | </tspan><tspan class="key">Stars: </tspan><tspan class="cc">${r.starsDots}</tspan><tspan class="value">${r.stars}</tspan>`;
+  } else if (r.type === 'stats_commits_followers') {
+    inner = `<tspan class="cc">. </tspan><tspan class="key">Commits:</tspan><tspan class="cc">${r.commitsDots}</tspan><tspan class="value">${r.commits}</tspan><tspan class="cc"> | </tspan><tspan class="key">Followers: </tspan><tspan class="cc">${r.followersDots}</tspan><tspan class="value">${r.followers}</tspan>`;
+  } else if (r.type === 'stats_loc') {
+    inner = `<tspan class="cc">. </tspan><tspan class="key">Lines of Code:</tspan><tspan class="cc">${r.locMidDots}</tspan><tspan class="value">${r.loc}</tspan><tspan class="cc"> ( </tspan><tspan class="addColor">${r.added}++</tspan><tspan class="cc">, </tspan><tspan class="delColor">${r.deleted}-- </tspan><tspan class="cc">${r.endDots} )</tspan>`;
   }
+  return `  <text x="25" y="${y}" xml:space="preserve">${inner}</text>\n`;
+}
 
-  const CARD_WIDTH = 600;
-  const CARD_HEIGHT = cardHeightFor(rightLines.length);
+function rowsToSvg(rows) {
+  return rows.map((r, i) => rowToSvg(r, FIRST_BASELINE + i * LINE_HEIGHT)).join('');
+}
+
+// The card chrome (rounded rect, clip path, colour classes) is identical
+// between cards — only the rows and dimensions differ.
+function wrapCard(isDark, width, height, rowsSvg) {
+  const colors = colorsFor(isDark);
 
   return `<?xml version='1.0' encoding='UTF-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CARD_WIDTH} ${CARD_HEIGHT}" width="100%" height="auto" xml:space="preserve" font-family="Consolas, 'Courier New', monospace">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="100%" height="auto" xml:space="preserve" font-family="Consolas, 'Courier New', monospace">
 <defs>
   <clipPath id="cardClip">
-    <rect width="${CARD_WIDTH}px" height="${CARD_HEIGHT}px" rx="15"/>
+    <rect width="${width}px" height="${height}px" rx="15"/>
   </clipPath>
 </defs>
 <style>
@@ -392,7 +454,7 @@ text, tspan { white-space: pre; }
 </style>
 
 <!-- Card Base -->
-<rect width="${CARD_WIDTH}px" height="${CARD_HEIGHT}px" fill="${colors.cardBg}" rx="15" ${colors.border}/>
+<rect width="${width}px" height="${height}px" fill="${colors.cardBg}" rx="15" ${colors.border}/>
 
 <!-- Neofetch Content -->
 <g clip-path="url(#cardClip)" font-size="16px">
@@ -400,6 +462,12 @@ ${rowsSvg}
 </g>
 </svg>
 `;
+}
+
+function renderSvg(theme, rightLines) {
+  const CARD_WIDTH = 600;
+  const CARD_HEIGHT = cardHeightFor(rightLines.length);
+  return wrapCard(theme === 'dark', CARD_WIDTH, CARD_HEIGHT, rowsToSvg(rightLines));
 }
 
 // ─── MAIN EXECUTION ───────────────────────────────────────────
@@ -421,7 +489,12 @@ export async function build() {
   fs.writeFileSync(path.join(ROOT, 'dark_mode.svg'), darkSvg, 'utf8');
   fs.writeFileSync(path.join(ROOT, 'light_mode.svg'), lightSvg, 'utf8');
 
-  console.log('✅ Built dark_mode.svg and light_mode.svg');
+  console.log('🖼️  Writing responsive projects_dark.svg and projects_light.svg...');
+  const projectLines = buildProjectLines(config.projects ?? []);
+  fs.writeFileSync(path.join(ROOT, 'projects_dark.svg'), renderProjectsSvg('dark', projectLines), 'utf8');
+  fs.writeFileSync(path.join(ROOT, 'projects_light.svg'), renderProjectsSvg('light', projectLines), 'utf8');
+
+  console.log('✅ Built dark_mode.svg, light_mode.svg, projects_dark.svg and projects_light.svg');
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
