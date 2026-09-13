@@ -2,7 +2,7 @@
   <a href="https://github.com/akifkomurcu">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./dark_mode.svg">
-      <img alt="akif's Profile" src="./light_mode.svg">
+      <img alt="akif's Profile" src="./light_mode.svg" width="60%">
     </picture>
   </a>
 </div>
@@ -29,7 +29,7 @@
 <div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./projects_dark.svg">
-    <img alt="Featured Projects" src="./projects_light.svg">
+    <img alt="Featured Projects" src="./projects_light.svg" width="60%">
   </picture>
 </div>
 
