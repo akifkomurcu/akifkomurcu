@@ -1137,8 +1137,8 @@ text, tspan { white-space: pre; }
   <text x="420" y="430" xml:space="preserve"><tspan class="cc">. </tspan></text>
   <text x="420" y="450" xml:space="preserve"><tspan class="cc">- </tspan><tspan class="title">GitHub Stats </tspan><tspan class="cc">-------------------------------------------</tspan></text>
   <text x="420" y="470" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Repos: </tspan><tspan class="value">76</tspan><tspan class="key"> {Contributed: </tspan><tspan class="value">1</tspan><tspan class="key">}</tspan><tspan class="cc"> | </tspan><tspan class="key">Stars: </tspan><tspan class="cc">..................</tspan><tspan class="value">10</tspan></text>
-  <text x="420" y="490" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Commits:</tspan><tspan class="cc">...............</tspan><tspan class="value">594</tspan><tspan class="cc"> | </tspan><tspan class="key">Followers: </tspan><tspan class="cc">..............</tspan><tspan class="value">21</tspan></text>
-  <text x="420" y="510" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Lines of Code:</tspan><tspan class="cc">......</tspan><tspan class="value">50,342</tspan><tspan class="cc"> ( </tspan><tspan class="addColor">69,490++</tspan><tspan class="cc">, </tspan><tspan class="delColor">19,148-- </tspan><tspan class="cc">...... )</tspan></text>
+  <text x="420" y="490" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Commits:</tspan><tspan class="cc">...............</tspan><tspan class="value">595</tspan><tspan class="cc"> | </tspan><tspan class="key">Followers: </tspan><tspan class="cc">..............</tspan><tspan class="value">21</tspan></text>
+  <text x="420" y="510" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Lines of Code:</tspan><tspan class="cc">...</tspan><tspan class="value">2,538,180</tspan><tspan class="cc"> ( </tspan><tspan class="addColor">2,741,199++</tspan><tspan class="cc">, </tspan><tspan class="delColor">203,019-- </tspan><tspan class="cc">.. )</tspan></text>
 
 </g>
 </svg>
