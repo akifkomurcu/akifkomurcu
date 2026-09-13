@@ -5,7 +5,8 @@
   "private": true,
   "description": "Dynamic GitHub profile README with neofetch-style terminal card",
   "scripts": {
-    "build": "node scripts/build-svg.js"
+    "build": "node scripts/build-svg.js",
+    "test": "node scripts/test-loc.mjs"
   },
   "dependencies": {
     "sharp": "^0.33.0"

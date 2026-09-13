@@ -102,6 +102,81 @@ async function generatePixelArt(imagePath) {
   return { buildPixelSvg };
 }
 
+// ─── REAL LINES OF CODE ───────────────────────────────────────
+// GitHub computes per-contributor weekly additions/deletions on the default
+// branch, but a repo whose cache is cold answers 202 and starts building it in
+// the background. So we ping every repo first, wait, then collect the numbers.
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const LOC_CONCURRENCY = 6;
+const LOC_WARMUP_WAIT_MS = Number(process.env.LOC_WARMUP_MS ?? 8000);
+const LOC_ATTEMPTS = 5;
+const LOC_RETRY_WAIT_MS = Number(process.env.LOC_RETRY_MS ?? 4000);
+
+function statsUrl(repo) {
+  return `https://api.github.com/repos/${repo.owner.login}/${repo.name}/stats/contributors`;
+}
+
+// Runs `worker` over `items`, LOC_CONCURRENCY at a time, so we never open
+// dozens of sockets at once.
+async function inBatches(items, worker) {
+  const out = [];
+  for (let i = 0; i < items.length; i += LOC_CONCURRENCY) {
+    const batch = items.slice(i, i + LOC_CONCURRENCY);
+    out.push(...await Promise.all(batch.map(item => worker(item).catch(() => null))));
+  }
+  return out;
+}
+
+export async function fetchRepoLoc(repo, username, headers) {
+  for (let attempt = 0; attempt < LOC_ATTEMPTS; attempt++) {
+    const res = await fetch(statsUrl(repo), { headers });
+
+    if (res.status === 202) {
+      await sleep(LOC_RETRY_WAIT_MS);
+      continue;
+    }
+    if (res.status === 204) return { additions: 0, deletions: 0 };  // empty repo
+    if (!res.ok) return null;
+
+    const contributors = await res.json();
+    if (!Array.isArray(contributors)) return null;
+
+    const mine = contributors.find(c => c?.author?.login?.toLowerCase() === username.toLowerCase());
+    if (!mine) return { additions: 0, deletions: 0 };
+
+    return mine.weeks.reduce(
+      (acc, w) => ({ additions: acc.additions + (w.a || 0), deletions: acc.deletions + (w.d || 0) }),
+      { additions: 0, deletions: 0 }
+    );
+  }
+  return null;  // cache never finished building
+}
+
+export async function fetchTotalLoc(repoList, username, headers) {
+  const own = repoList.filter(r => !r.fork);
+  if (own.length === 0) return null;
+
+  // Warm-up pass: the response is irrelevant, we only want the cache built.
+  await inBatches(own, repo => fetch(statsUrl(repo), { headers }));
+  await sleep(LOC_WARMUP_WAIT_MS);
+
+  const results = await inBatches(own, repo => fetchRepoLoc(repo, username, headers));
+
+  let additions = 0;
+  let deletions = 0;
+  let counted = 0;
+  for (const r of results) {
+    if (!r) continue;
+    additions += r.additions;
+    deletions += r.deletions;
+    counted++;
+  }
+
+  console.log(`   counted ${counted}/${own.length} non-fork repos`);
+  return counted > 0 ? { additions, deletions } : null;
+}
+
 // ─── FETCH LIVE GITHUB STATS ──────────────────────────────────
 async function fetchStats(username) {
   const token = process.env.GITHUB_TOKEN || process.env.ACCESS_TOKEN;
@@ -117,6 +192,7 @@ async function fetchStats(username) {
   let contributed = 12;
   let commits = 1450;
   let createdAt = '2023-11-30T19:20:31Z';
+  let loc = null;
 
   try {
     const userRes = await fetch(`https://api.github.com/users/${username}`, { headers });
@@ -131,6 +207,9 @@ async function fetchStats(username) {
     if (reposRes.ok) {
       const repoList = await reposRes.json();
       stars = repoList.reduce((acc, r) => acc + (r.stargazers_count || 0), 0);
+
+      console.log('📏 Measuring lines of code across owned repos...');
+      loc = await fetchTotalLoc(repoList, username, headers);
     }
 
     if (token) {
@@ -170,8 +249,12 @@ async function fetchStats(username) {
     console.error('Stats fetch error:', err.message);
   }
 
-  const additions = Math.round(commits * 85 + repos * 250);
-  const deletions = Math.round(commits * 22 + repos * 80);
+  if (!loc) {
+    // Never silently invent numbers: fall back to zero and say so.
+    console.warn('⚠️  Lines of code unavailable — the card will show 0.');
+    loc = { additions: 0, deletions: 0 };
+  }
+  const { additions, deletions } = loc;
   const netLoc = additions - deletions;
 
   return { repos, stars, followers, contributed, commits, additions, deletions, netLoc, createdAt };
@@ -436,7 +519,9 @@ export async function build() {
   console.log('✅ Built dark_mode.svg and light_mode.svg');
 }
 
-build().catch((err) => {
-  console.error('❌ Build failed:', err);
-  process.exit(1);
-});
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  build().catch((err) => {
+    console.error('❌ Build failed:', err);
+    process.exit(1);
+  });
+}
