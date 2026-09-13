@@ -1,7 +1,7 @@
 <a href="https://github.com/akifkomurcu">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./dark_mode.svg">
-    <img alt="akif's Profile" src="./light_mode.svg" width="60%">
+    <img alt="akif's Profile" src="./light_mode.svg" width="100%">
   </picture>
 </a>
 
