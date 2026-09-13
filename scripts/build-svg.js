@@ -265,12 +265,6 @@ function buildProjectLines(projects) {
   return rows;
 }
 
-function renderProjectsSvg(theme, projectLines) {
-  const CARD_WIDTH = 600;
-  const CARD_HEIGHT = cardHeightFor(projectLines.length);
-  return wrapCard(theme === 'dark', CARD_WIDTH, CARD_HEIGHT, rowsToSvg(projectLines));
-}
-
 // ─── FORMAT RIGHT COLUMN WITH DOT LEADERS ─────────────────────
 function buildRightLines(stats, uptime) {
   // Target width: exactly 58 characters so right margin matches left margin (25px each)
@@ -480,21 +474,18 @@ export async function build() {
   const uptime = calculateUptime(stats.createdAt || config.uptimeStartDate);
   console.log(`⏱️  Uptime (from GitHub join date): ${uptime}`);
 
-  const rightLines = buildRightLines(stats, uptime);
+  // One card: stats followed by a blank line and the featured-projects rows.
+  const rows = [
+    ...buildRightLines(stats, uptime),
+    { type: 'blank' },
+    ...buildProjectLines(config.projects ?? []),
+  ];
 
   console.log('🖼️  Writing responsive dark_mode.svg and light_mode.svg...');
-  const darkSvg = renderSvg('dark', rightLines);
-  const lightSvg = renderSvg('light', rightLines);
+  fs.writeFileSync(path.join(ROOT, 'dark_mode.svg'), renderSvg('dark', rows), 'utf8');
+  fs.writeFileSync(path.join(ROOT, 'light_mode.svg'), renderSvg('light', rows), 'utf8');
 
-  fs.writeFileSync(path.join(ROOT, 'dark_mode.svg'), darkSvg, 'utf8');
-  fs.writeFileSync(path.join(ROOT, 'light_mode.svg'), lightSvg, 'utf8');
-
-  console.log('🖼️  Writing responsive projects_dark.svg and projects_light.svg...');
-  const projectLines = buildProjectLines(config.projects ?? []);
-  fs.writeFileSync(path.join(ROOT, 'projects_dark.svg'), renderProjectsSvg('dark', projectLines), 'utf8');
-  fs.writeFileSync(path.join(ROOT, 'projects_light.svg'), renderProjectsSvg('light', projectLines), 'utf8');
-
-  console.log('✅ Built dark_mode.svg, light_mode.svg, projects_dark.svg and projects_light.svg');
+  console.log('✅ Built dark_mode.svg and light_mode.svg');
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 410" width="100%" height="auto" xml:space="preserve" font-family="Consolas, 'Courier New', monospace">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1010" width="100%" height="auto" xml:space="preserve" font-family="Consolas, 'Courier New', monospace">
 <defs>
   <clipPath id="cardClip">
-    <rect width="600px" height="410px" rx="15"/>
+    <rect width="600px" height="1010px" rx="15"/>
   </clipPath>
 </defs>
 <style>
@@ -16,13 +16,13 @@ text, tspan { white-space: pre; }
 </style>
 
 <!-- Card Base -->
-<rect width="600px" height="410px" fill="#ffffff" rx="15" stroke="#d0d7de" stroke-width="1"/>
+<rect width="600px" height="1010px" fill="#ffffff" rx="15" stroke="#d0d7de" stroke-width="1"/>
 
 <!-- Neofetch Content -->
 <g clip-path="url(#cardClip)" font-size="16px">
   <text x="25" y="30" xml:space="preserve"><tspan class="key">akif@komurcu </tspan><tspan class="cc">---------------------------------------------</tspan></text>
   <text x="25" y="50" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Host:</tspan><tspan class="cc">...............................</tspan><tspan class="value">Full Stack Developer</tspan></text>
-  <text x="25" y="70" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Uptime:</tspan><tspan class="cc">.......................</tspan><tspan class="value">7 years, 7 months, 23 days</tspan></text>
+  <text x="25" y="70" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Uptime:</tspan><tspan class="cc">.......................</tspan><tspan class="value">6 years, 8 months, 12 days</tspan></text>
   <text x="25" y="90" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Kernel:</tspan><tspan class="cc">.............</tspan><tspan class="value">React, React Native, Angular, NestJS</tspan></text>
   <text x="25" y="110" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Databases:</tspan><tspan class="cc">.................</tspan><tspan class="value">PostgreSQL, MongoDB, Supabase</tspan></text>
   <text x="25" y="130" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">DevOps:</tspan><tspan class="cc">....................</tspan><tspan class="value">Docker, Jenkins, Nginx, Linux</tspan></text>
@@ -36,9 +36,39 @@ text, tspan { white-space: pre; }
   <text x="25" y="290" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Focus:</tspan><tspan class="cc">..................</tspan><tspan class="value">Web + Mobile Product Engineering</tspan></text>
   <text x="25" y="310" xml:space="preserve"><tspan class="cc">. </tspan></text>
   <text x="25" y="330" xml:space="preserve"><tspan class="cc">- </tspan><tspan class="title">GitHub Stats </tspan><tspan class="cc">-------------------------------------------</tspan></text>
-  <text x="25" y="350" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Repos: </tspan><tspan class="value">76</tspan><tspan class="key"> {Contributed: </tspan><tspan class="value">1</tspan><tspan class="key">}</tspan><tspan class="cc"> | </tspan><tspan class="key">Stars: </tspan><tspan class="cc">..................</tspan><tspan class="value">10</tspan></text>
-  <text x="25" y="370" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Commits:</tspan><tspan class="cc">...............</tspan><tspan class="value">436</tspan><tspan class="cc"> | </tspan><tspan class="key">Followers: </tspan><tspan class="cc">..............</tspan><tspan class="value">21</tspan></text>
-  <text x="25" y="390" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Lines of Code:</tspan><tspan class="cc">...</tspan><tspan class="value">2,538,180</tspan><tspan class="cc"> ( </tspan><tspan class="addColor">2,741,199++</tspan><tspan class="cc">, </tspan><tspan class="delColor">203,019-- </tspan><tspan class="cc">.. )</tspan></text>
+  <text x="25" y="350" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Repos: </tspan><tspan class="value">0</tspan><tspan class="key"> {Contributed: </tspan><tspan class="value">0</tspan><tspan class="key">}</tspan><tspan class="cc"> | </tspan><tspan class="key">Stars: </tspan><tspan class="cc">....................</tspan><tspan class="value">0</tspan></text>
+  <text x="25" y="370" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Commits:</tspan><tspan class="cc">................</tspan><tspan class="value">0</tspan><tspan class="cc"> | </tspan><tspan class="key">Followers: </tspan><tspan class="cc">................</tspan><tspan class="value">0</tspan></text>
+  <text x="25" y="390" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Lines of Code:</tspan><tspan class="cc">..........</tspan><tspan class="value">0</tspan><tspan class="cc"> ( </tspan><tspan class="addColor">0++</tspan><tspan class="cc">, </tspan><tspan class="delColor">0-- </tspan><tspan class="cc">................. )</tspan></text>
+  <text x="25" y="410" xml:space="preserve"><tspan class="cc">. </tspan></text>
+  <text x="25" y="430" xml:space="preserve"><tspan class="cc">- </tspan><tspan class="title">Featured Projects </tspan><tspan class="cc">--------------------------------------</tspan></text>
+  <text x="25" y="450" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Apptionly:</tspan><tspan class="cc">.......</tspan><tspan class="value">React 19, Zustand, Tailwind 4, Supabase</tspan></text>
+  <text x="25" y="470" xml:space="preserve"><tspan class="cc">    App Store screenshot generator: canvas rendering,</tspan></text>
+  <text x="25" y="490" xml:space="preserve"><tspan class="cc">    undo/redo, PWA.</tspan></text>
+  <text x="25" y="510" xml:space="preserve"><tspan class="cc">. </tspan></text>
+  <text x="25" y="530" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">maarifhan:</tspan><tspan class="cc">.......................................</tspan><tspan class="value">Angular</tspan></text>
+  <text x="25" y="550" xml:space="preserve"><tspan class="cc">    AI-supported education platform.</tspan></text>
+  <text x="25" y="570" xml:space="preserve"><tspan class="cc">. </tspan></text>
+  <text x="25" y="590" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">maarifhan-be:</tspan><tspan class="cc">.....................................</tspan><tspan class="value">NestJS</tspan></text>
+  <text x="25" y="610" xml:space="preserve"><tspan class="cc">    Backend for maarifhan.</tspan></text>
+  <text x="25" y="630" xml:space="preserve"><tspan class="cc">. </tspan></text>
+  <text x="25" y="650" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">TapLocks:</tspan><tspan class="cc">..........................................</tspan><tspan class="value">Swift</tspan></text>
+  <text x="25" y="670" xml:space="preserve"><tspan class="cc">    Lets you easily lock your screen. macOS app.</tspan></text>
+  <text x="25" y="690" xml:space="preserve"><tspan class="cc">. </tspan></text>
+  <text x="25" y="710" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Shelf:</tspan><tspan class="cc">.............................................</tspan><tspan class="value">Swift</tspan></text>
+  <text x="25" y="730" xml:space="preserve"><tspan class="cc">    macOS menu bar icon manager, native Command+Drag.</tspan></text>
+  <text x="25" y="750" xml:space="preserve"><tspan class="cc">. </tspan></text>
+  <text x="25" y="770" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Moon Tracker:</tspan><tspan class="cc">...............................</tspan><tspan class="value">React Native</tspan></text>
+  <text x="25" y="790" xml:space="preserve"><tspan class="cc">    iOS moon phase/lunar cycle tracker.</tspan></text>
+  <text x="25" y="810" xml:space="preserve"><tspan class="cc">. </tspan></text>
+  <text x="25" y="830" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">FloatX (Sliding Apps):</tspan><tspan class="cc">............................</tspan><tspan class="value">Kotlin</tspan></text>
+  <text x="25" y="850" xml:space="preserve"><tspan class="cc">    Android floating multitasking hub.</tspan></text>
+  <text x="25" y="870" xml:space="preserve"><tspan class="cc">. </tspan></text>
+  <text x="25" y="890" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Product Alarm:</tspan><tspan class="cc">............................</tspan><tspan class="value">Python, Docker</tspan></text>
+  <text x="25" y="910" xml:space="preserve"><tspan class="cc">    Price-tracking scraper (Akakçe, Trendyol,</tspan></text>
+  <text x="25" y="930" xml:space="preserve"><tspan class="cc">    Hepsiburada) with Telegram alerts.</tspan></text>
+  <text x="25" y="950" xml:space="preserve"><tspan class="cc">. </tspan></text>
+  <text x="25" y="970" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">idm-cli:</tspan><tspan class="cc">..........................................</tspan><tspan class="value">Python</tspan></text>
+  <text x="25" y="990" xml:space="preserve"><tspan class="cc">    Download tool like idm, works on terminal.</tspan></text>
 
 </g>
 </svg>
