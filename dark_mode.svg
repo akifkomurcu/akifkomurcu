@@ -22,23 +22,23 @@ text, tspan { white-space: pre; }
 <g clip-path="url(#cardClip)" font-size="16px">
   <text x="25" y="30" xml:space="preserve"><tspan class="key">akif@komurcu </tspan><tspan class="cc">---------------------------------------------</tspan></text>
   <text x="25" y="50" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Host:</tspan><tspan class="cc">...............................</tspan><tspan class="value">Full Stack Developer</tspan></text>
-  <text x="25" y="70" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Uptime:</tspan><tspan class="cc">.......................</tspan><tspan class="value">7 years, 7 months, 23 days</tspan></text>
-  <text x="25" y="90" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Kernel:</tspan><tspan class="cc">............</tspan><tspan class="value">React, React Native, Angular, Next.js</tspan></text>
+  <text x="25" y="70" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Uptime:</tspan><tspan class="cc">.......................</tspan><tspan class="value">6 years, 8 months, 12 days</tspan></text>
+  <text x="25" y="90" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Kernel:</tspan><tspan class="cc">.............</tspan><tspan class="value">React, React Native, Angular, NestJS</tspan></text>
   <text x="25" y="110" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Databases:</tspan><tspan class="cc">.................</tspan><tspan class="value">PostgreSQL, MongoDB, Supabase</tspan></text>
   <text x="25" y="130" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">DevOps:</tspan><tspan class="cc">....................</tspan><tspan class="value">Docker, Jenkins, Nginx, Linux</tspan></text>
   <text x="25" y="150" xml:space="preserve"><tspan class="cc">. </tspan></text>
-  <text x="25" y="170" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Languages.Code:</tspan><tspan class="cc">....</tspan><tspan class="value">TypeScript, JavaScript, Swift, Kotlin</tspan></text>
+  <text x="25" y="170" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Languages.Code:</tspan><tspan class="cc">............</tspan><tspan class="value">TypeScript, JavaScript, Swift</tspan></text>
   <text x="25" y="190" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Frontend:</tspan><tspan class="cc">.........</tspan><tspan class="value">React, React Native, Angular, Tailwind</tspan></text>
-  <text x="25" y="210" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Backend:</tspan><tspan class="cc">.............</tspan><tspan class="value">NestJS, Node.js, Express, REST APIs</tspan></text>
+  <text x="25" y="210" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Backend:</tspan><tspan class="cc">.....</tspan><tspan class="value">NestJS, Node.js, Express, Python, REST APIs</tspan></text>
   <text x="25" y="230" xml:space="preserve"><tspan class="cc">. </tspan></text>
   <text x="25" y="250" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Native:</tspan><tspan class="cc">..............</tspan><tspan class="value">Swift (macOS/iOS), Kotlin (Android)</tspan></text>
   <text x="25" y="270" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Tools:</tspan><tspan class="cc">...............</tspan><tspan class="value">Git, GitHub Actions, Xcode, Postman</tspan></text>
   <text x="25" y="290" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Focus:</tspan><tspan class="cc">..................</tspan><tspan class="value">Web + Mobile Product Engineering</tspan></text>
   <text x="25" y="310" xml:space="preserve"><tspan class="cc">. </tspan></text>
   <text x="25" y="330" xml:space="preserve"><tspan class="cc">- </tspan><tspan class="title">GitHub Stats </tspan><tspan class="cc">-------------------------------------------</tspan></text>
-  <text x="25" y="350" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Repos: </tspan><tspan class="value">76</tspan><tspan class="key"> {Contributed: </tspan><tspan class="value">1</tspan><tspan class="key">}</tspan><tspan class="cc"> | </tspan><tspan class="key">Stars: </tspan><tspan class="cc">..................</tspan><tspan class="value">10</tspan></text>
-  <text x="25" y="370" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Commits:</tspan><tspan class="cc">...............</tspan><tspan class="value">436</tspan><tspan class="cc"> | </tspan><tspan class="key">Followers: </tspan><tspan class="cc">..............</tspan><tspan class="value">21</tspan></text>
-  <text x="25" y="390" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Lines of Code:</tspan><tspan class="cc">...</tspan><tspan class="value">2,538,180</tspan><tspan class="cc"> ( </tspan><tspan class="addColor">2,741,199++</tspan><tspan class="cc">, </tspan><tspan class="delColor">203,019-- </tspan><tspan class="cc">.. )</tspan></text>
+  <text x="25" y="350" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Repos: </tspan><tspan class="value">0</tspan><tspan class="key"> {Contributed: </tspan><tspan class="value">0</tspan><tspan class="key">}</tspan><tspan class="cc"> | </tspan><tspan class="key">Stars: </tspan><tspan class="cc">....................</tspan><tspan class="value">0</tspan></text>
+  <text x="25" y="370" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Commits:</tspan><tspan class="cc">................</tspan><tspan class="value">0</tspan><tspan class="cc"> | </tspan><tspan class="key">Followers: </tspan><tspan class="cc">................</tspan><tspan class="value">0</tspan></text>
+  <text x="25" y="390" xml:space="preserve"><tspan class="cc">. </tspan><tspan class="key">Lines of Code:</tspan><tspan class="cc">..........</tspan><tspan class="value">0</tspan><tspan class="cc"> ( </tspan><tspan class="addColor">0++</tspan><tspan class="cc">, </tspan><tspan class="delColor">0-- </tspan><tspan class="cc">................. )</tspan></text>
 
 </g>
 </svg>

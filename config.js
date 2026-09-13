@@ -13,14 +13,14 @@ export default {
 
   // Professional info
   role: 'Full Stack Developer',
-  kernel: 'React, React Native, Angular, Next.js',
+  kernel: 'React, React Native, Angular, NestJS',
   databases: 'PostgreSQL, MongoDB, Supabase',
   devops: 'Docker, Jenkins, Nginx, Linux',
 
   // Skills
-  languagesCode: 'TypeScript, JavaScript, Swift, Kotlin',
+  languagesCode: 'TypeScript, JavaScript, Swift',
   frontend: 'React, React Native, Angular, Tailwind',
-  backend: 'NestJS, Node.js, Express, REST APIs',
+  backend: 'NestJS, Node.js, Express, Python, REST APIs',
   native: 'Swift (macOS/iOS), Kotlin (Android)',
   tools: 'Git, GitHub Actions, Xcode, Postman',
   focus: 'Web + Mobile Product Engineering',
