@@ -16,9 +16,17 @@ const ROOT = path.join(__dirname, '..');
 // Right column layout: first baseline at 30, one line every 20, 20 of padding
 // underneath. Everything else sizes itself off the number of lines, so adding
 // or removing a line never leaves the card the wrong height.
-const FIRST_BASELINE = 30;
-const LINE_HEIGHT = 20;
-const BOTTOM_PADDING = 20;
+const FONT_SIZE = 11;         // was 16 — the card renders at width:100%, so
+                               // font-size is relative to whatever column
+                               // width GitHub gives it; smaller keeps it from
+                               // reading like a wall of giant text.
+const MARGIN_X = 17;
+const FIRST_BASELINE = 21;
+const LINE_HEIGHT = 14;
+const BOTTOM_PADDING = 14;
+const TARGET_LEN = 86;         // dot-leader line length, in characters —
+                               // scales inversely with FONT_SIZE so lines
+                               // keep filling the card width
 const cardHeightFor = rowCount =>
   FIRST_BASELINE + (rowCount - 1) * LINE_HEIGHT + BOTTOM_PADDING;
 
@@ -234,8 +242,7 @@ function wrapText(text, maxLen) {
 }
 
 function buildProjectLines(projects) {
-  const TARGET_LEN = 58;
-  const DESC_WIDTH = 52; // leaves room for the 4-space indent inside TARGET_LEN
+  const DESC_WIDTH = TARGET_LEN - 6; // leaves room for the 4-space indent
 
   const headerPrefix = '- Featured Projects ';
   const headerDashes = '-'.repeat(Math.max(2, TARGET_LEN - headerPrefix.length));
@@ -267,9 +274,6 @@ function buildProjectLines(projects) {
 
 // ─── FORMAT RIGHT COLUMN WITH DOT LEADERS ─────────────────────
 function buildRightLines(stats, uptime) {
-  // Target width: exactly 58 characters so right margin matches left margin (25px each)
-  const TARGET_LEN = 58;
-
   function makeDotLine(key, value) {
     const keyWithColon = key + ':';
     // Rendered: '. ' (2) + keyWithColon + dots + value
@@ -418,7 +422,7 @@ function rowToSvg(r, y) {
   } else if (r.type === 'stats_loc') {
     inner = `<tspan class="cc">. </tspan><tspan class="key">Lines of Code:</tspan><tspan class="cc">${r.locMidDots}</tspan><tspan class="value">${r.loc}</tspan><tspan class="cc"> ( </tspan><tspan class="addColor">${r.added}++</tspan><tspan class="cc">, </tspan><tspan class="delColor">${r.deleted}-- </tspan><tspan class="cc">${r.endDots} )</tspan>`;
   }
-  return `  <text x="25" y="${y}" xml:space="preserve">${inner}</text>\n`;
+  return `  <text x="${MARGIN_X}" y="${y}" xml:space="preserve">${inner}</text>\n`;
 }
 
 function rowsToSvg(rows) {
@@ -438,12 +442,12 @@ function wrapCard(isDark, width, height, rowsSvg) {
   </clipPath>
 </defs>
 <style>
-.key { fill: ${colors.key}; font-weight: 500; font-size: 16px; }
-.value { fill: ${colors.value}; font-size: 16px; }
-.addColor { fill: ${colors.add}; font-size: 16px; }
-.delColor { fill: ${colors.del}; font-size: 16px; }
-.cc { fill: ${colors.cc}; font-size: 16px; }
-.title { fill: ${colors.title}; font-size: 16px; }
+.key { fill: ${colors.key}; font-weight: 500; font-size: ${FONT_SIZE}px; }
+.value { fill: ${colors.value}; font-size: ${FONT_SIZE}px; }
+.addColor { fill: ${colors.add}; font-size: ${FONT_SIZE}px; }
+.delColor { fill: ${colors.del}; font-size: ${FONT_SIZE}px; }
+.cc { fill: ${colors.cc}; font-size: ${FONT_SIZE}px; }
+.title { fill: ${colors.title}; font-size: ${FONT_SIZE}px; }
 text, tspan { white-space: pre; }
 </style>
 
@@ -451,7 +455,7 @@ text, tspan { white-space: pre; }
 <rect width="${width}px" height="${height}px" fill="${colors.cardBg}" rx="15" ${colors.border}/>
 
 <!-- Neofetch Content -->
-<g clip-path="url(#cardClip)" font-size="16px">
+<g clip-path="url(#cardClip)" font-size="${FONT_SIZE}px">
 ${rowsSvg}
 </g>
 </svg>
