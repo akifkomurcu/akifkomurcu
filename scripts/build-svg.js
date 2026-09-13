@@ -1,13 +1,10 @@
 // ╔══════════════════════════════════════════════════════════════╗
-// ║        🚀 DYNAMIC SVG BUILDER (Edge-to-Edge Pixel Grid)    ║
+// ║              🚀 DYNAMIC SVG BUILDER (Terminal Card)         ║
 // ║                                                            ║
-// ║  • Left: Edge-to-edge pixel grid (zero padding, full height)║
-// ║    with subtle matrix grid lines and chunky avatar tiles   ║
-// ║  • Right: Tailored Neofetch terminal card with live stats  ║
-// ║  • Responsive, zero horizontal scroll, dark/light themes    ║
+// ║  Neofetch-style terminal card with live GitHub stats.       ║
+// ║  Responsive, zero horizontal scroll, dark/light themes.     ║
 // ╚══════════════════════════════════════════════════════════════╝
 
-import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -59,57 +56,6 @@ function calculateUptime(startDateStr) {
   const isBirthday = months === 0 && days === 0;
 
   return `${yStr}, ${mStr}, ${dStr}${isBirthday ? ' 🎂' : ''}`;
-}
-
-// ─── GENERATE CHUNKY PIXEL PORTRAIT ───────────────────────────
-// Renders the avatar as a grid of flat colour tiles (one <rect> per tile),
-// which survives any font stack — unlike glyph based ASCII art.
-async function generatePixelArt(imagePath, cardHeight) {
-  const CELL = 12;                 // tile size in SVG units
-  const INSET = 20;                // breathing room above and below the art
-  const GRID = Math.floor((cardHeight - INSET * 2) / CELL);  // tiles per side
-  const ORIGIN_X = 10;
-  const ORIGIN_Y = Math.round((cardHeight - GRID * CELL) / 2);
-
-  let pipeline = sharp(imagePath);
-  if (config.avatarCrop) pipeline = pipeline.extract(config.avatarCrop);
-
-  const { data } = await pipeline
-    .modulate({ brightness: 1.05, saturation: 1.2 })
-    .resize(GRID, GRID, { fit: 'cover' })
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-
-  function buildPixelSvg(isDark) {
-    let out = '';
-    for (let r = 0; r < GRID; r++) {
-      for (let c = 0; c < GRID; c++) {
-        const i = (r * GRID + c) * 4;
-        const alpha = data[i + 3];
-        if (alpha < 35) continue;
-
-        let [red, green, blue] = [data[i], data[i + 1], data[i + 2]];
-        if (config.grayscalePixels) {
-          const lum = Math.round(0.299 * red + 0.587 * green + 0.114 * blue);
-          red = green = blue = lum;
-        }
-        // lift the darkest tiles off the card background so the shape stays visible
-        const floor = isDark ? 26 : 0;
-        const lift = v => Math.max(floor, isDark ? v : Math.min(255, Math.round(v * 0.95 + 12)));
-        const hex = '#' + [lift(red), lift(green), lift(blue)]
-          .map(v => v.toString(16).padStart(2, '0'))
-          .join('');
-
-        const x = ORIGIN_X + c * CELL;
-        const y = ORIGIN_Y + r * CELL;
-        out += `    <rect x="${x}" y="${y}" width="${CELL}" height="${CELL}" fill="${hex}"/>\n`;
-      }
-    }
-    return out;
-  }
-
-  return { buildPixelSvg };
 }
 
 // ─── REAL COMMIT AND LINE COUNTS ──────────────────────────────
@@ -374,7 +320,7 @@ function buildRightLines(stats, uptime) {
 }
 
 // ─── RENDER RESPONSIVE SVG (DARK & LIGHT) ─────────────────────
-function renderSvg(theme, pixelData, rightLines) {
+function renderSvg(theme, rightLines) {
   const isDark = theme === 'dark';
 
   const colors = isDark
@@ -399,8 +345,6 @@ function renderSvg(theme, pixelData, rightLines) {
         title: '#24292f',
       };
 
-  const leftPixelSvg = pixelData.buildPixelSvg(isDark);
-
   // Generate right column lines
   let rowsSvg = '';
   for (let i = 0; i < rightLines.length; i++) {
@@ -424,10 +368,10 @@ function renderSvg(theme, pixelData, rightLines) {
       rightSvg = `<tspan class="cc">. </tspan><tspan class="key">Lines of Code:</tspan><tspan class="cc">${r.locMidDots}</tspan><tspan class="value">${r.loc}</tspan><tspan class="cc"> ( </tspan><tspan class="addColor">${r.added}++</tspan><tspan class="cc">, </tspan><tspan class="delColor">${r.deleted}-- </tspan><tspan class="cc">${r.endDots} )</tspan>`;
     }
 
-    rowsSvg += `  <text x="420" y="${y}" xml:space="preserve">${rightSvg}</text>\n`;
+    rowsSvg += `  <text x="25" y="${y}" xml:space="preserve">${rightSvg}</text>\n`;
   }
 
-  const CARD_WIDTH = 1000;
+  const CARD_WIDTH = 600;
   const CARD_HEIGHT = cardHeightFor(rightLines.length);
 
   return `<?xml version='1.0' encoding='UTF-8'?>
@@ -450,12 +394,7 @@ text, tspan { white-space: pre; }
 <!-- Card Base -->
 <rect width="${CARD_WIDTH}px" height="${CARD_HEIGHT}px" fill="${colors.cardBg}" rx="15" ${colors.border}/>
 
-<!-- Left Pixel Portrait -->
-<g clip-path="url(#cardClip)" shape-rendering="crispEdges">
-${leftPixelSvg}
-</g>
-
-<!-- Right Neofetch Content -->
+<!-- Neofetch Content -->
 <g clip-path="url(#cardClip)" font-size="16px">
 ${rowsSvg}
 </g>
@@ -475,13 +414,9 @@ export async function build() {
 
   const rightLines = buildRightLines(stats, uptime);
 
-  console.log('🎨 Generating chunky pixel portrait...');
-  const avatarPath = path.join(ROOT, config.avatarImage);
-  const pixelData = await generatePixelArt(avatarPath, cardHeightFor(rightLines.length));
-
   console.log('🖼️  Writing responsive dark_mode.svg and light_mode.svg...');
-  const darkSvg = renderSvg('dark', pixelData, rightLines);
-  const lightSvg = renderSvg('light', pixelData, rightLines);
+  const darkSvg = renderSvg('dark', rightLines);
+  const lightSvg = renderSvg('light', rightLines);
 
   fs.writeFileSync(path.join(ROOT, 'dark_mode.svg'), darkSvg, 'utf8');
   fs.writeFileSync(path.join(ROOT, 'light_mode.svg'), lightSvg, 'utf8');
