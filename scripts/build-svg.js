@@ -102,7 +102,7 @@ async function generatePixelArt(imagePath) {
   return { buildPixelSvg };
 }
 
-// ─── REAL LINES OF CODE ───────────────────────────────────────
+// ─── REAL COMMIT AND LINE COUNTS ──────────────────────────────
 // GitHub computes per-contributor weekly additions/deletions on the default
 // branch, but a repo whose cache is cold answers 202 and starts building it in
 // the background. So we ping every repo first, wait, then collect the numbers.
@@ -136,18 +136,18 @@ export async function fetchRepoLoc(repo, username, headers) {
       await sleep(LOC_RETRY_WAIT_MS);
       continue;
     }
-    if (res.status === 204) return { additions: 0, deletions: 0 };  // empty repo
+    if (res.status === 204) return { additions: 0, deletions: 0, commits: 0 };  // empty repo
     if (!res.ok) return null;
 
     const contributors = await res.json();
     if (!Array.isArray(contributors)) return null;
 
     const mine = contributors.find(c => c?.author?.login?.toLowerCase() === username.toLowerCase());
-    if (!mine) return { additions: 0, deletions: 0 };
+    if (!mine) return { additions: 0, deletions: 0, commits: 0 };
 
     return mine.weeks.reduce(
-      (acc, w) => ({ additions: acc.additions + (w.a || 0), deletions: acc.deletions + (w.d || 0) }),
-      { additions: 0, deletions: 0 }
+      (acc, w) => ({ ...acc, additions: acc.additions + (w.a || 0), deletions: acc.deletions + (w.d || 0) }),
+      { additions: 0, deletions: 0, commits: mine.total || 0 }
     );
   }
   return null;  // cache never finished building
@@ -165,16 +165,18 @@ export async function fetchTotalLoc(repoList, username, headers) {
 
   let additions = 0;
   let deletions = 0;
+  let commits = 0;
   let counted = 0;
   for (const r of results) {
     if (!r) continue;
     additions += r.additions;
     deletions += r.deletions;
+    commits += r.commits;
     counted++;
   }
 
   console.log(`   counted ${counted}/${own.length} non-fork repos`);
-  return counted > 0 ? { additions, deletions } : null;
+  return counted > 0 ? { additions, deletions, commits } : null;
 }
 
 // ─── FETCH LIVE GITHUB STATS ──────────────────────────────────
@@ -186,12 +188,13 @@ async function fetchStats(username) {
   };
   if (token) headers.Authorization = `token ${token}`;
 
-  let repos = 38;
-  let followers = 29;
-  let stars = 38;
-  let contributed = 12;
-  let commits = 1450;
-  let createdAt = '2023-11-30T19:20:31Z';
+  // Zeroed rather than hard-coded, so a failed fetch never shows a stale or
+  // borrowed number as if it were real.
+  let repos = 0;
+  let followers = 0;
+  let stars = 0;
+  let contributed = 0;
+  let createdAt = config.uptimeStartDate;
   let loc = null;
 
   try {
@@ -208,7 +211,7 @@ async function fetchStats(username) {
       const repoList = await reposRes.json();
       stars = repoList.reduce((acc, r) => acc + (r.stargazers_count || 0), 0);
 
-      console.log('📏 Measuring lines of code across owned repos...');
+      console.log('📏 Counting commits and lines of code across owned repos...');
       loc = await fetchTotalLoc(repoList, username, headers);
     }
 
@@ -219,11 +222,6 @@ async function fetchStats(username) {
             user(login: $login) {
               repositoriesContributedTo(first: 1) {
                 totalCount
-              }
-              contributionsCollection {
-                contributionCalendar {
-                  totalContributions
-                }
               }
             }
           }
@@ -238,7 +236,6 @@ async function fetchStats(username) {
           const userGql = gql?.data?.user;
           if (userGql) {
             contributed = userGql.repositoriesContributedTo?.totalCount || contributed;
-            commits = userGql.contributionsCollection?.contributionCalendar?.totalContributions || commits;
           }
         }
       } catch (err) {
@@ -251,10 +248,10 @@ async function fetchStats(username) {
 
   if (!loc) {
     // Never silently invent numbers: fall back to zero and say so.
-    console.warn('⚠️  Lines of code unavailable — the card will show 0.');
-    loc = { additions: 0, deletions: 0 };
+    console.warn('⚠️  Commit and line counts unavailable — the card will show 0.');
+    loc = { additions: 0, deletions: 0, commits: 0 };
   }
-  const { additions, deletions } = loc;
+  const { additions, deletions, commits } = loc;
   const netLoc = additions - deletions;
 
   return { repos, stars, followers, contributed, commits, additions, deletions, netLoc, createdAt };
